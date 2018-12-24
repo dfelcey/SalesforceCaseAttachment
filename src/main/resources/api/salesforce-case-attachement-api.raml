@@ -1,0 +1,37 @@
+#%RAML 1.0
+title: Salesforce Case Attachement API
+
+traits:
+   client-id-required:
+    headers:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+
+/attachment:
+  post:
+    is: [ client-id-required ]
+    body: 
+      multipart/form-data:
+        properties: 
+          file1: 
+            description: The file to attach to case 
+            required: true 
+            type: file 
+            fileTypes: [ 'image/jpeg']
+          fileName:
+            description: The name of the file attachement
+            required: true
+            type: string   
+          emailAddress:
+            description: The email address of the contact
+            required: true
+    responses: 
+      201:
+        body: 
+          application/json:
+            example: |
+              {
+                "Message": "success"
+              }

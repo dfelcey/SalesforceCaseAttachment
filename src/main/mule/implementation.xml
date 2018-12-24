@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	<flow name="SalesforceFlow" doc:id="e7e641cb-ff93-4d49-92b7-a30fda42a7b6" >
+		<ee:transform doc:name="Transform Message" doc:id="d3950e94-0307-40e8-b860-5d2a6c22e426" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="fileName" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.fileName]]></ee:set-variable>
+				<ee:set-variable variableName="emailAddress" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.emailAddress]]></ee:set-variable>
+				<ee:set-variable variableName="contentType" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.contentType]]></ee:set-variable>
+				<ee:set-variable variableName="fileContents" ><![CDATA[%dw 2.0
+output application/java
+---
+payload.fileContents]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<salesforce:query-single doc:name="Query single" doc:id="5f926544-c38c-4dd6-be50-b1ed49668430" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query>SELECT Id from case where ContactEmail = ':emailAddress'</salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[output application/java
+---
+{
+	"emailAddress" : vars.emailAddress
+}]]]></salesforce:parameters>
+		</salesforce:query-single>
+		<set-variable value="#[payload]" doc:name="Set Variable" doc:id="7f5fb825-529a-4310-9a0c-85d35a0495f6" variableName="parentId"/>
+		<ee:transform doc:name="Transform Message" doc:id="ebb09dcf-23cd-4c2f-9790-7055e64a8cc7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+import * from dw::core::Binaries
+
+---
+[
+	{
+		ParentId: vars.parentId.Id,
+		Name: vars.fileName,
+		Body: vars.fileContents as Binary,
+		ContentType: vars.contentType
+	}
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="Attachment" doc:name="Create" doc:id="ee16ff4e-4a1f-40f4-ad76-75f8888614a9" config-ref="Salesforce_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="b7b4e351-78f6-449a-8efd-760ac917277d" message="#[output application/json --- payload]"/>
+		<set-payload value='#[output application/json
+---
+{
+	"Message": "success"
+}]' doc:name="Set Payload" doc:id="870bedc5-936d-4bd5-9322-893255490e5d" />
+	</flow>
+</mule>
