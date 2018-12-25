@@ -10,10 +10,10 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
 	<salesforce:sfdc-config name="Salesforce_Config" doc:name="Salesforce Config" doc:id="1a9f6eac-9ad2-45ea-917a-6baec53273a2" >
-		<salesforce:basic-connection username="${sfdc.username}" password="${sfdc.password}" securityToken="${sfdc.token}" url="${sfdc.url}"/>
+		<salesforce:basic-connection username="${secure::sfdc.username}" password="${secure::sfdc.password}" securityToken="${secure::sfdc.token}" url="${secure::sfdc.url}"/>
 	</salesforce:sfdc-config>
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e89ba86b-d643-45c5-9d8f-e28e28816ec8" basePath="${http.base_path}" >
-		<http:listener-connection host="${http.host}" port="${http.port}" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e89ba86b-d643-45c5-9d8f-e28e28816ec8" basePath="${secure::http.base_path}" >
+		<http:listener-connection host="${secure::http.host}" port="${secure::http.port}" />
 	</http:listener-config>
 	<configuration-properties doc:name="Configuration properties" doc:id="924583f9-e0f7-432c-a0c5-8ee0cc66ff02" file="config.yaml" />
 	<api-gateway:autodiscovery apiId="15601823" doc:name="API Autodiscovery" doc:id="7a7a0caf-fc85-4629-aae9-ae27e5ab6ecf" flowRef="post:\attachment:multipart\form-data:salesforce-case-attachement-api-config" />
