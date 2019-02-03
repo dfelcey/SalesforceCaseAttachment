@@ -119,13 +119,22 @@ output application/json
         </error-handler>
     </flow>
 	<flow name="post:\attachment:multipart\form-data:salesforce-case-attachement-api-config">
-        <ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="750d963a-fd99-4a87-9a66-862922e0fe3a">
+        <set-variable value="#[payload.parts.contentTransferEncoding.content default 'binary']" doc:name="Save Encoding" doc:id="7236bc18-f9e0-4e3a-ad7a-e199852b4fc9" variableName="encodingType"/>
+		<ee:transform xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd" doc:id="750d963a-fd99-4a87-9a66-862922e0fe3a">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/java
+
+import * from dw::core::Binaries
+
 ---
 {	
-	fileContents: payload.parts.file1.content as Binary,
+	fileContents: 
+		if(vars.encodingType == 'base64') 
+      		fromBase64(payload.parts.file1.content) as Binary
+      	else 
+      		payload.parts.file1.content as Binary
+    ,
 	fileName: payload.parts.fileName.content as String,
 	contentType: payload.parts.file1.headers.'Content-Type' as String,
 	emailAddress: payload.parts.emailAddress.content as String
