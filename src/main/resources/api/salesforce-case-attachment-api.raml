@@ -1,5 +1,6 @@
 #%RAML 1.0
-title: Salesforce Case Attachement API
+version: v1
+title: Salesforce Case Attachment API
 
 traits:
    client-id-required:
@@ -21,9 +22,13 @@ traits:
             type: file 
             fileTypes: [ 'image/jpeg']
           fileName:
-            description: The name of the file attachement
+            description: The name of the file attachment
             required: true
             type: string   
+          fileEncoding:
+            description: The encoding type for the file
+            enum: ['binary','base64']
+            required: true
           emailAddress:
             description: The email address of the contact
             required: true
@@ -33,5 +38,12 @@ traits:
           application/json:
             example: |
               {
-                "Message": "success"
+                "status": "success"
+              }
+      204:
+        body: 
+          application/json:
+            example: |
+              {
+                "status": "no action"
               }

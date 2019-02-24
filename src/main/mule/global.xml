@@ -16,7 +16,7 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e89ba86b-d643-45c5-9d8f-e28e28816ec8" basePath="${secure::http.base_path}" >
 		<http:listener-connection host="${secure::http.host}" port="${secure::http.port}" />
 	</http:listener-config>
-	<api-gateway:autodiscovery apiId="15601823" doc:name="API Autodiscovery" doc:id="7a7a0caf-fc85-4629-aae9-ae27e5ab6ecf" flowRef="post:\attachment:multipart\form-data:salesforce-case-attachement-api-config" />
+	<api-gateway:autodiscovery apiId="15601823" doc:name="API Autodiscovery" doc:id="7a7a0caf-fc85-4629-aae9-ae27e5ab6ecf" flowRef="post:\attachment:multipart\form-data:salesforce-case-attachment-api-config" />
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="48ecaa42-cace-426c-93a1-6821879f07bb" file="config.yaml" key="${config.key}" >
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>

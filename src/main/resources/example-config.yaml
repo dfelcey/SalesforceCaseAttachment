@@ -1,0 +1,9 @@
+sfdc:
+  username: "testuser"
+  password: "pasword"
+  token: "xyz"
+  url: "https://saleforce.com/"
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  base_path: "/"
