@@ -79,7 +79,7 @@ output application/java
 				</ee:transform>
 			</when>
 			<otherwise >
-				<logger level="INFO" doc:name="Logger" doc:id="9af3aa25-77c1-4478-823c-ddef8460d5d9" />
+				<logger level="INFO" doc:name="Logger" doc:id="9af3aa25-77c1-4478-823c-ddef8460d5d9" message="#['No case found for email address: ' ++ vars.emailAddress]"/>
 				<ee:transform doc:name="Transform Message" doc:id="0c540a23-000b-4c23-9a2f-1cb1b2eaf7a8" >
 					<ee:message >
 						<ee:set-payload ><![CDATA[%dw 2.0
